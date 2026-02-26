@@ -51,7 +51,10 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+void pointTurn(int);
+void movingTurn(int);
+void moveForward(void);
+void stop(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -228,7 +231,35 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+pointTurn(int direction){
+	if (direction > 0){
+			//set motor 1 to max
+			//set motor 2 to negative max
+		}
+		if (direction < 0){
+				//set motor 1 to negative max
+				//set motor 2 to max
+		}
+}
 
+movingTurn(int direction){
+	if (direction > 0){
+		//set motor 1 to max
+		//set motor 2 to 0
+	}
+	if (direction < 0){
+			//set motor 1 to 0
+			//set motor 2 to max
+	}
+}
+
+moveForward(void){
+	//set motor speed to max
+}
+
+stop(void){
+	//set motor speed to 0
+}
 /* USER CODE END 4 */
 
 /**
