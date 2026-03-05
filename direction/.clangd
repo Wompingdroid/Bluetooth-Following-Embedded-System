@@ -1,0 +1,11 @@
+CompileFlags:
+#  Add: 
+#    - -std=c++23
+#    - -mlong-calls
+#    - -ffunction-sections
+#    - -fdata-sections
+  Remove:
+    - -mlongcalls
+    - -mdisable-hardware-atomics
+    - -fstrict-volatile-bitfields
+    - -fno-tree-switch-conversion
