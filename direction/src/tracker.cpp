@@ -1,111 +1,89 @@
-#define BLESERIAL_USE_NIMBLE true
-
-#include <HardwareSerial.h>
 #include <NimBLEDevice.h>
-#include <nimble/nimble/host/include/host/ble_gap.h>
 
-// Define the BLE Serial Service and Characteristic UUIDs
-// 00
-// #define SERVICE_UUID           "6e400001-b5a3-f393-e0a9-e50e24dcca9e"  // Custom service UUID (similar to SPP)
-// #define RX_CHAR_UUID           "6e400002-b5a3-f393-e0a9-e50e24dcca9e"  // Characteristic for receiving data
-// #define TX_CHAR_UUID           "6e400003-b5a3-f393-e0a9-e50e24dcca9e"  // Characteristic for transmitting data
+#include <TinyGPS++.h>
+#include <HardwareSerial.h>
 
-// 01
-#define SERVICE_UUID           "6e400001-b5a3-f393-e0a9-e50e24dcca9a"  // Custom service UUID (similar to SPP)
-#define RX_CHAR_UUID           "6e400002-b5a3-f393-e0a9-e50e24dcca9a"  // Characteristic for receiving data
-#define TX_CHAR_UUID           "6e400003-b5a3-f393-e0a9-e50e24dcca9a"  // Characteristic for transmitting data
+#define GPS
 
-const String device_name = "BLE-DEV-01";  // Arduino String object
+#define SERVICE_UUID "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+#define TX_CHAR_UUID "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
 
-NimBLECharacteristic *pRXCharacteristic;
-NimBLECharacteristic *default_pRXCharacteristic;
-NimBLECharacteristic* pTXCharacteristic;
-NimBLEServer* pServer;
-NimBLEService* pService;
+static void notifyCB(
+  NimBLERemoteCharacteristic* c,
+  uint8_t* data,
+  size_t len,
+  bool isNotify) {
 
-String lastReceivedData = "";  // Variable to track the last received data
+  String msg = String((char*)data);
+  Serial.println("GPS: " + msg);
+}
+
+#ifdef GPS
+TinyGPSPlus gps;
+HardwareSerial gpsSerial(2);
+#endif
+
+
+NimBLEClient* client;
 
 void setup() {
-    Serial.begin(9600);
-    
-    // Initialize NimBLE with the device name
-    NimBLEDevice::init(device_name.c_str());
-    
-    // Create the BLE server
-    pServer = NimBLEDevice::createServer();
 
-    // Create the BLE Serial service
-    pService = pServer->createService(SERVICE_UUID);
+  Serial.begin(115200);
 
-    // Create the RX characteristic (for receiving data)
-    pRXCharacteristic = pService->createCharacteristic(
-        RX_CHAR_UUID,
-        NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::READ
-    );
-    default_pRXCharacteristic = pRXCharacteristic;
+#ifdef GPS
+  gpsSerial.begin(9600, SERIAL_8N1, 15, 2);
+#endif
 
-    // Create the TX characteristic (for transmitting data)
-    pTXCharacteristic = pService->createCharacteristic(
-        TX_CHAR_UUID,
-        NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ
-    );
+  NimBLEDevice::init("");
 
-    // Start the service
-    pService->start();
+  NimBLEScan* scan = NimBLEDevice::getScan();
+  scan->setActiveScan(true);
 
-    // Start advertising the BLE server
-    NimBLEAdvertising* pAdvertising = pServer->getAdvertising();
-    pAdvertising->start();
+  NimBLEScanResults results = scan->start(5);
 
-    // Set the power level (optional)
-    NimBLEDevice::setPower(ESP_PWR_LVL_P9);
+  for(int i=0;i<results.getCount();i++){
+
+    NimBLEAdvertisedDevice dev = results.getDevice(i);
+
+    if(dev.getName() == "GPS-Beacon"){
+
+      client = NimBLEDevice::createClient();
+
+      client->connect(&dev);
+
+      NimBLERemoteService* svc =
+        client->getService(SERVICE_UUID);
+
+      NimBLERemoteCharacteristic* chr =
+        svc->getCharacteristic(TX_CHAR_UUID);
+
+      chr->subscribe(true, notifyCB);
+
+      Serial.println("Connected to beacon!");
+    }
+  }
 }
 
 void loop() {
-    // Check if there's data available from BLE (via RX characteristic)
-    if (pRXCharacteristic->getValue().length() > 0) {
-      String receivedData = pRXCharacteristic->getValue().c_str();
-    //   pRXCharacteristic->getHandle()
-        
-        // Process the received data only if it's different from the last received data
-        if (receivedData != lastReceivedData) {
-          Serial.println("Received BLE data: " + receivedData);
-          
-            
-            // Update the last received data to the new value
-            lastReceivedData = receivedData;
-        }
-    }
+#ifdef GPS
+  while (gpsSerial.available()) {
+    gps.encode(gpsSerial.read());
+  }
 
-    // Forward data from Serial to BLE (TX characteristic)
-    if (Serial.available()) {
-        char data = Serial.read();
-        pTXCharacteristic->setValue(String(data));  // Update TX characteristic with the new data
-        pTXCharacteristic->notify();  // Notify connected clients with new data
-    }
+  if (gps.location.isUpdated()) {
 
-    std::vector<short unsigned int> devices =
-        NimBLEDevice::getServer()->getPeerDevices();
+    char data[64];
 
-    // Serial.println("Connected devices:");
+    snprintf(data, sizeof(data), "%f,%f",
+      gps.location.lat(),
+      gps.location.lng());
 
-    for (uint16_t dev_idx = 0; dev_idx < devices.size(); dev_idx++) {
-      int8_t rssi;
-      ble_gap_conn_rssi(NimBLEDevice::getServer()->getPeerInfo(dev_idx).getConnHandle(),  &rssi);
-      Serial.println(rssi);
-      
-    //   NimBLEClient::getRssi();
-    }
 
-    delay(10);  // Add a small delay to prevent flooding the loop
+    Serial.println(data);
+  }
+#endif
+  if (client != NULL) {
+    Serial.println(client->getRssi());
+  }
+  delay(50);
 }
-
-class MyServerCallbacks : public NimBLEServerCallbacks {
-  void onConnect(NimBLEServer* pServer) {
-    Serial.println("Device Connected.");
-  }
-
-  void onDisconnect(NimBLEServer* pServer) {
-    Serial.println("Device Disconnected.");
-  }
-};

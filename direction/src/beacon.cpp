@@ -1,79 +1,57 @@
 #include <NimBLEDevice.h>
+#include <TinyGPS++.h>
+#include <HardwareSerial.h>
 
-NimBLEServer *pServer = NULL;
-NimBLECharacteristic *pCharacteristic = NULL;
-NimBLEAdvertising *pAdvertising = NULL;
+#define SERVICE_UUID "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+#define TX_CHAR_UUID "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
 
-NimBLEClient *client00 = NULL;
-NimBLEClient *client01 = NULL;
+TinyGPSPlus gps;
+HardwareSerial gpsSerial(2);
 
-const std::string master00 = "44:1d:64:f8:ed:0e"; // Address of Master 00
-const std::string master01 = "44:1d:64:f8:df:66"; // Address of Master 01
+NimBLECharacteristic *pTX;
 
 void setup() {
+
   Serial.begin(115200);
+  gpsSerial.begin(9600, SERIAL_8N1, 15, 2);
 
-  // Initialize BLE
-  NimBLEDevice::init("MyPeripheral");
+  NimBLEDevice::init("GPS-Beacon");
 
-  // Create BLE server
-  pServer = NimBLEDevice::createServer();
+  NimBLEServer *server = NimBLEDevice::createServer();
+  NimBLEService *service = server->createService(SERVICE_UUID);
 
-  // Add service
-  NimBLEService *pService =
-      pServer->createService("12345678-1234-1234-1234-1234567890ab");
+  pTX = service->createCharacteristic(
+        TX_CHAR_UUID,
+        NIMBLE_PROPERTY::NOTIFY
+  );
 
-  // Create a characteristic
-  pCharacteristic = pService->createCharacteristic(
-      "abcdef01-1234-1234-1234-1234567890ab",
-      NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
+  service->start();
+  server->getAdvertising()->start();
 
-  // Start the service
-  pService->start();
-
-  // Start advertising to allow the master devices to connect
-  pAdvertising = pServer->getAdvertising();
-  pAdvertising->start();
-
-  Serial.println("BLE Peripheral Started and Advertising...");
-
-  // Initialize clients for both master devices
-  client00 = NimBLEDevice::createClient();
-  client01 = NimBLEDevice::createClient();
-
-  // Try connecting directly to both master devices
-  Serial.println("Connecting to Master 00...");
-  if (client00->connect(master00)) {
-    Serial.println("Connected to Master 00!");
-  } else {
-    Serial.println("Failed to connect to Master 00");
-  }
-
-  Serial.println("Connecting to Master 01...");
-  if (client01->connect(master01)) {
-    Serial.println("Connected to Master 01!");
-  } else {
-    Serial.println("Failed to connect to Master 01");
-  }
+  Serial.println("Beacon advertising...");
 }
 
 void loop() {
-  // Check if both clients are connected
-  if (client00->isConnected() && client01->isConnected()) {
-    // Send data to the first master
-    String data00 = "Hello Master 0";
-    pCharacteristic->setValue(data00.c_str());
-    pCharacteristic->notify(); // Send notification to the first master
 
-    // Send data to the second master
-    String data01 = "Hello Master 1";
-    pCharacteristic->setValue(data01.c_str());
-    pCharacteristic->notify(); // Send notification to the second master
-
-    Serial.println("Data sent to both masters.");
-  } else {
-    Serial.println("Waiting for connections...");
+  while (gpsSerial.available()) {
+    gps.encode(gpsSerial.read());
   }
 
-  delay(10); // Delay before next loop
+  if (gps.location.isUpdated()) {
+
+    char data[64];
+
+    snprintf(data, sizeof(data), "%f,%f",
+      gps.location.lat(),
+      gps.location.lng());
+
+    pTX->setValue(data);
+    pTX->notify();
+
+    Serial.println(data);
+  } else {
+    //pTX->notify();
+  }
+
+  delay(10);
 }
