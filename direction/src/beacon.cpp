@@ -10,14 +10,28 @@ HardwareSerial gpsSerial(2);
 
 NimBLECharacteristic *pTX;
 
+class ServerCallbacks : public NimBLEServerCallbacks {
+  void onConnect(NimBLEServer* pServer) {
+    Serial.println("Client connected");
+    NimBLEDevice::startAdvertising(); // allow another client
+  }
+
+  void onDisconnect(NimBLEServer* pServer) {
+    Serial.println("Client disconnected");
+    NimBLEDevice::startAdvertising();
+  }
+};
+
 void setup() {
 
   Serial.begin(115200);
   gpsSerial.begin(9600, SERIAL_8N1, 15, 2);
 
   NimBLEDevice::init("GPS-Beacon");
+  //NimBLEDevice::setMaxConnections(2);
 
   NimBLEServer *server = NimBLEDevice::createServer();
+  server->setCallbacks(new ServerCallbacks());
   NimBLEService *service = server->createService(SERVICE_UUID);
 
   pTX = service->createCharacteristic(

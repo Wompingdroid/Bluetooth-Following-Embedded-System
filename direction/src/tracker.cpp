@@ -32,15 +32,22 @@ void setup() {
 
 #ifdef GPS
   gpsSerial.begin(9600, SERIAL_8N1, 15, 2);
+  //NimBLEDevice::init("yesgps");
+  #else
+
 #endif
 
-  NimBLEDevice::init("");
+  NimBLEDevice::init("yesgps");
 
   NimBLEScan* scan = NimBLEDevice::getScan();
   scan->setActiveScan(true);
 
+  Serial.println("Scanning for beacon!");
   NimBLEScanResults results = scan->start(5);
 
+  Serial.print("Matching ");
+  Serial.print(results.getCount());
+  Serial.println(" devices");
   for(int i=0;i<results.getCount();i++){
 
     NimBLEAdvertisedDevice dev = results.getDevice(i);
@@ -61,6 +68,9 @@ void setup() {
 
       Serial.println("Connected to beacon!");
     }
+  }
+  if (NULL == client) {
+    Serial.println("Failed to connect!");
   }
 }
 
