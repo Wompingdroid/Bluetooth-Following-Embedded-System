@@ -1,0 +1,5 @@
+../Core/Src/robot.c:8:6:Robot_Init	32	static
+../Core/Src/robot.c:17:6:Robot_Forward	16	static
+../Core/Src/robot.c:31:6:Robot_Backward	16	static
+../Core/Src/robot.c:45:6:Robot_Spin	16	static
+../Core/Src/robot.c:62:6:Robot_Stop	16	static
