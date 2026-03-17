@@ -153,24 +153,24 @@ int main(void)
   while (1)
     {
       // Test sequence: (Note that using delays is not good in the main loop as the code for processing the uart has to run frequently.
-      Robot_Forward(&robot, 128, 0);
-      HAL_Delay(1000);
-      Robot_Forward(&robot, 128, 64);
-      HAL_Delay(1000);
-      Robot_Forward(&robot, 128, -64);
-      HAL_Delay(1000);
-      Robot_Spin(&robot, 128);
-      HAL_Delay(1000);
-      Robot_Spin(&robot, -128);
-      HAL_Delay(1000);
-      Robot_Backward(&robot, 128, 0);
-      HAL_Delay(1000);
-      Robot_Backward(&robot, 128, 64);
-      HAL_Delay(1000);
-      Robot_Backward(&robot, 128, -64);
-      HAL_Delay(1000);
-      Robot_Stop(&robot);
-      HAL_Delay(5000);
+      //Robot_Forward(&robot, 128, 0);
+	  //HAL_Delay(1000);
+	  //Robot_Forward(&robot, 128, 64);
+	  //HAL_Delay(1000);
+	  //Robot_Forward(&robot, 128, -64);
+      //HAL_Delay(1000);
+	  //Robot_Spin(&robot, 128);
+	  //HAL_Delay(1000);
+	  //Robot_Spin(&robot, -128);
+	  //HAL_Delay(1000);
+	  //Robot_Backward(&robot, 128, 0);
+	  //HAL_Delay(1000);
+	  //Robot_Backward(&robot, 128, 64);
+	  //HAL_Delay(1000);
+	  //Robot_Backward(&robot, 128, -64);
+	  //HAL_Delay(1000);
+	  //Robot_Stop(&robot);
+	  //HAL_Delay(5000);
 
       // Parsing code for the data from the ESP32 boards. Needs to run frequently
       if (process_uart4) {
