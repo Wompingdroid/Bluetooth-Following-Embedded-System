@@ -60,8 +60,8 @@ all: main-build
 main-build: Nav-Tank.elf secondary-outputs
 
 # Tool invocations
-Nav-Tank.elf Nav-Tank.map: $(OBJS) $(USER_OBJS) /home/nathan/school/ECEN_361/Bluetooth-Following-Embedded-System/Nav-Tank/STM32L476RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Nav-Tank.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/nathan/school/ECEN_361/Bluetooth-Following-Embedded-System/Nav-Tank/STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Nav-Tank.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Nav-Tank.elf Nav-Tank.map: $(OBJS) $(USER_OBJS) C:\Users\jaden\Documents\GitHub\Bluetooth-Following-Embedded-System\Nav-Tank\STM32L476RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Nav-Tank.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\jaden\Documents\GitHub\Bluetooth-Following-Embedded-System\Nav-Tank\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Nav-Tank.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -172,6 +172,26 @@ int main(void)
 	  //Robot_Stop(&robot);
 	  //HAL_Delay(5000);
 
+
+	  	  //Robot_Spin(&robot, 128);
+	  	  //Robot_Spin(&robot, -128);
+	  	  //Robot_Backward(&robot, 128, 0);
+	  	  //Robot_Stop(&robot);
+
+	  //if (data4_tracker_lat > data4_tracker_lat)
+	  //if (data4_beacon_lon > data4_tracker_lon)
+	  //if (data5_tracker_lat > data5_tracker_lat)
+	  //if (data5_beacon_lon > data5_tracker_lon)
+
+	  if (data4_rssi > data5_rssi+3)
+	  	  Robot_Forward(&robot, 128, 64);
+	  else if (data4_rssi+3 < data5_rssi)
+	      Robot_Forward(&robot, 128, -64);
+	  //else if (data4_rssi > -65 && data5_rssi > -65)
+		  //Robot_Stop(&robot);
+	  else
+	  	  Robot_Forward(&robot, 128, 0);
+
       // Parsing code for the data from the ESP32 boards. Needs to run frequently
       if (process_uart4) {
         if ('G' == recvd_data4[0]) {
