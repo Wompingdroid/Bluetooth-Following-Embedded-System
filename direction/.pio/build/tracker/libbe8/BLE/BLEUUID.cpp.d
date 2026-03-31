@@ -1,0 +1,32 @@
+.pio/build/tracker/libbe8/BLE/BLEUUID.cpp.o: \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32/libraries/BLE/src/BLEUUID.cpp \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/soc/esp32/include/soc/soc_caps.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/dio_qspi/include/sdkconfig.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32/libraries/BLE/src/BLEUUID.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32/cores/esp32/WString.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32/cores/esp32/pgmspace.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/bt/host/bluedroid/api/include/api/esp_gatt_defs.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/bt/host/bluedroid/api/include/api/esp_bt_defs.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-log.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/esp_timer/include/esp_timer.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/esp_common/include/esp_err.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/esp_common/include/esp_compiler.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/esp_hw_support/include/esp_etm.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/esp_rom/esp32/include/esp32/rom/ets_sys.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_log.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/esp_rom/include/esp_rom_sys.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/soc/esp32/include/soc/reset_reasons.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_log_config.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_log_level.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/esp_common/include/esp_assert.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_log_color.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_log_buffer.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_log_timestamp.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_log_write.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_log_format.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_log_args.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/esp_common/include/esp_macros.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/esp_common/include/esp_assert.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_log_attr.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/esp_common/include/esp_attr.h \
+ /home/nathan/.platformio/packages/framework-arduinoespressif32-libs/esp32/include/log/include/esp_private/log_attr.h
